@@ -43,7 +43,7 @@ def getId(cusId):
         if "channel" in myresult[x][3]:
             channelId.append(myresult[x][3].split("/")[-1])
 
-    #channelInfoDeliver = getChannelInfo(channelId)
+    channelInfoDeliver = getChannelInfo(channelId)
     videoInfoDeliver = getVideoInfo(videoId)
 
 
@@ -64,6 +64,8 @@ def getChannelInfo(channelIdRx):
             response = requests.get(apiUrl)
         except requests.exceptions.ConnectionError:
             time.sleep(60)
+            print("\n\n ERROR \n\n")
+
             continue
         
 
@@ -85,6 +87,8 @@ def getChannelInfo(channelIdRx):
 def getVideoInfo(videoId):
     fileAppend2 = open("videoLatest.csv", "w")
     fileAppend2.write('Video Id , Latest Comment , Published Date')
+    comment = 0
+    date = 0
     print("Grabbing ", len(videoId), " Record(s) \n")
     print('Video Id , Latest Comment , Published Date')
     for x in range(len(videoId)):
@@ -95,6 +99,8 @@ def getVideoInfo(videoId):
             response = requests.get(apiUrl)
         except requests.exceptions.ConnectionError:
             time.sleep(60)
+
+            print("\n\n ERROR \n\n")
             continue
 
         try:
