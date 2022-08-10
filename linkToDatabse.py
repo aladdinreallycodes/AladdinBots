@@ -1,4 +1,4 @@
-from curses import endwin
+#from curses import endwin
 import string
 import time
 import requests
