@@ -1,13 +1,13 @@
 from curses import endwin
+from re import template
 import string
 import time
 import requests
 from progress.bar import Bar
 
 
-
-
-f = open("/Users/alyeldinshahin/Documents/ZakRequest.txt", "r")
+f = open("ZakRequest.txt", 'r',
+         encoding='UTF-8')
 links = f.readlines()
 
 #cusName= 'sprinklr'
@@ -30,16 +30,29 @@ for x in range(len(links)):
     #time.sleep(3)
     links[x] =links[x].strip()
     tempLink = str(links[x])
-    
+    #print(tempLink[0])
+
     if (tempLink == ""):
         continue
+    if (tempLink[0] != 'h'):
+        #print("Link Dont work")
+        #print (tempLink)
+        links[x] = "http://"+tempLink
+        #print(tempLink)
     #print(tempLink)
-    if ("/watch/" in links[x]):
+
+
+    if ("/watch?" in links[x]):
         #print("Video Number "+str(x)+ " Submitted")
         API_ENDPOINT = "http://"+cusName+":"+authKey + "@localhost:8080/"+cusName+"/youtube/main/videos"
-    if("/channel/" in links[x] or "/c/" in links[x] or "/user/" in links[x]):
+    elif("/channel/" in links[x] or "/c/" in links[x] or "/user/" in links[x]):
         #print("Channel Number "+str(x)+" Submitted")
         API_ENDPOINT = "http://"+cusName+":"+authKey + "@localhost:8080/"+cusName+"/youtube/main/channels"
+    else:
+        API_ENDPOINT = "http://"+cusName+":"+authKey + "@localhost:8080/"+cusName+"/youtube/main/channels"
+
+
+
 
 
     
@@ -49,7 +62,7 @@ for x in range(len(links)):
     data = stringToExport
     r = requests.post(url=API_ENDPOINT, data=data)
     bar.next()
-    #print(r.text)
+    print(r.text)
     if ("failure" in r.text):
         #print("Faild at Link:\n"+str(links[x]))
         failedLinks.append(str(links[x]))
