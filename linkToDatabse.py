@@ -1,5 +1,6 @@
 from curses import endwin
 from re import template
+from curses import endwin
 import string
 import time
 import requests
@@ -8,6 +9,7 @@ from progress.bar import Bar
 
 f = open("ZakRequest.txt", 'r',
          encoding='UTF-8')
+
 links = f.readlines()
 
 #cusName= 'sprinklr'
