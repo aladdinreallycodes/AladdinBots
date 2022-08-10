@@ -7,7 +7,7 @@ from progress.bar import Bar
 
 
 
-f = open("/Users/alyeldinshahin/Documents/ZakRequest.txt", "r")
+f = open("ZakRequest.txt", "r")
 links = f.readlines()
 
 #cusName= 'sprinklr'
