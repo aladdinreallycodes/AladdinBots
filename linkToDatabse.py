@@ -7,70 +7,88 @@ import requests
 from progress.bar import Bar
 
 
-f = open("ZakRequest.txt", 'r',
-         encoding='UTF-8')
 
-links = f.readlines()
+def mainProg(cusName , authKey):
 
-#cusName= 'sprinklr'
-#authKey = 'LUrqgCXgzE'
+    f = open("ZakRequest.txt", 'r',
+            encoding='UTF-8')
 
-#crimson
-#Rhbvcjy1122
+    links = f.readlines()
 
-cusName = 'crimson'
-authKey = 'Rhbvcjy1122'
 
-failedLinks = []
 
-#API_ENDPOINT = "http://"+cusName+":"+authKey+"@localhost:8080/"+cusName+"/youtube/main/channels"
+    failedLinks = []
 
-bar = Bar('Processing', max=len(links))
-print("Adding "+str(len(links))+" Record(s) To "+cusName)
+    #API_ENDPOINT = "http://"+cusName+":"+authKey+"@localhost:8080/"+cusName+"/youtube/main/channels"
 
-for x in range(len(links)):
-    #time.sleep(3)
-    links[x] =links[x].strip()
-    tempLink = str(links[x])
-    #print(tempLink[0])
+    bar = Bar('Processing', max=len(links))
+    print("Adding "+str(len(links))+" Record(s) To "+cusName)
 
-    if (tempLink == ""):
-        continue
-    if (tempLink[0] != 'h'):
-        #print("Link Dont work")
-        #print (tempLink)
-        links[x] = "http://"+tempLink
+    for x in range(len(links)):
+        #time.sleep(3)
+        links[x] =links[x].strip()
+        tempLink = str(links[x])
+        #print(tempLink[0])
+
+        if (tempLink == ""):
+            continue
+        if (tempLink[0] != 'h'):
+            #print("Link Dont work")
+            #print (tempLink)
+            links[x] = "http://"+tempLink
+            #print(tempLink)
         #print(tempLink)
-    #print(tempLink)
 
 
-    if ("/watch?" in links[x]):
-        #print("Video Number "+str(x)+ " Submitted")
-        API_ENDPOINT = "http://"+cusName+":"+authKey + "@localhost:8080/"+cusName+"/youtube/main/videos"
-    elif("/channel/" in links[x] or "/c/" in links[x] or "/user/" in links[x]):
-        #print("Channel Number "+str(x)+" Submitted")
-        API_ENDPOINT = "http://"+cusName+":"+authKey + "@localhost:8080/"+cusName+"/youtube/main/channels"
-    else:
-        API_ENDPOINT = "http://"+cusName+":"+authKey + "@localhost:8080/"+cusName+"/youtube/main/channels"
-
-
+        if ("/watch?" in links[x]):
+            #print("Video Number "+str(x)+ " Submitted")
+            API_ENDPOINT = "http://"+cusName+":"+authKey + "@localhost:8080/"+cusName+"/youtube/main/videos"
+        elif("/channel/" in links[x] or "/c/" in links[x] or "/user/" in links[x]):
+            #print("Channel Number "+str(x)+" Submitted")
+            API_ENDPOINT = "http://"+cusName+":"+authKey + "@localhost:8080/"+cusName+"/youtube/main/channels"
+        else:
+            API_ENDPOINT = "http://"+cusName+":"+authKey + "@localhost:8080/"+cusName+"/youtube/main/channels"
 
 
 
+
+
+        
+        stringToExport = (
+            '\n{\n\t\"addAll\": {\n\n\t\t"url": "'+links[x]+'"\n\t}\n}')
+        data = stringToExport
+        r = requests.post(url=API_ENDPOINT, data=data)
+        bar.next()
+        #print(r.text)          <--Uncomment this line if you want to see the results of every api call
+        if ("failure" in r.text):
+            failedLinks.append(str(links[x]))
+
+    print(failedLinks)
+    bar.finish()
+
+
+if __name__ == "__main__":
+    comp = input("\nChoose company to add links to:\n1)Crimson\n2)Sprinklr\n")
+    comp = int(comp)
     
-    stringToExport = (
-        '\n{\n\t\"addAll\": {\n\n\t\t"url": "'+links[x]+'"\n\t}\n}')
-    #print (stringToExport)
-    data = stringToExport
-    r = requests.post(url=API_ENDPOINT, data=data)
-    bar.next()
-    print(r.text)
-    if ("failure" in r.text):
-        #print("Faild at Link:\n"+str(links[x]))
-        failedLinks.append(str(links[x]))
-
-print(failedLinks)
-bar.finish()
+    if comp == 1:
+        
+        cusName = 'crimson'
+        authKey = 'Rhbvcjy1122'
+        verify = input("Adding records to "+cusName+" are you sure?(y/n)")
+        if verify == 'y' or verify == 'Y':
+            mainProg(cusName,authKey)
+        else:
+            print("Program Terminated")
+    
+    if comp == 2:
+        cusName = 'sprinklr'
+        authKey = 'LUrqgCXgzE'
+        verify = input("Adding records to "+cusName+" are you sure?(y/n)")
+        if verify == 'y' or verify == 'Y':
+            mainProg(cusName, authKey)
+        else:
+            print("Program Terminated")
 
 
 
