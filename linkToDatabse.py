@@ -19,7 +19,6 @@ def mainProg(cusName , authKey):
 
     failedLinks = []
 
-    #API_ENDPOINT = "http://"+cusName+":"+authKey+"@localhost:8080/"+cusName+"/youtube/main/channels"
 
     bar = Bar('Processing', max=len(links))
     print("Adding "+str(len(links))+" Record(s) To "+cusName)
@@ -33,18 +32,13 @@ def mainProg(cusName , authKey):
         if (tempLink == ""):
             continue
         if (tempLink[0] != 'h'):
-            #print("Link Dont work")
-            #print (tempLink)
             links[x] = "http://"+tempLink
-            #print(tempLink)
-        #print(tempLink)
 
 
-        if ("/watch?" in links[x]):
-            #print("Video Number "+str(x)+ " Submitted")
+
+        if ("/watch?" in links[x] or "/shorts/" in links[x]):
             API_ENDPOINT = "http://"+cusName+":"+authKey + "@localhost:8080/"+cusName+"/youtube/main/videos"
         elif("/channel/" in links[x] or "/c/" in links[x] or "/user/" in links[x]):
-            #print("Channel Number "+str(x)+" Submitted")
             API_ENDPOINT = "http://"+cusName+":"+authKey + "@localhost:8080/"+cusName+"/youtube/main/channels"
         else:
             API_ENDPOINT = "http://"+cusName+":"+authKey + "@localhost:8080/"+cusName+"/youtube/main/channels"
